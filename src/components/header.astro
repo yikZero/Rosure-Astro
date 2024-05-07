@@ -1,0 +1,39 @@
+---
+import Logo from '@/icons/logo.astro';
+import Github from '@/icons/github.astro';
+import ArrowUpRight from '@/icons/arrowupright.astro';
+---
+
+<header
+  class="sticky inset-x-0 top-0 z-50 flex h-16 flex-row items-center justify-between gap-8 border-b border-border bg-body-background px-4 md:px-5"
+>
+  <a href="/" class="group flex flex-row gap-2">
+    <Logo
+      class="size-7 text-brand-500 transition-all duration-300 group-hover:opacity-80"
+    />
+    <span class="hidden self-end text-sm font-semibold text-primary sm:block">
+      Rosure
+    </span>
+  </a>
+  <nav class="flex flex-row gap-3">
+    <a
+      href="https://github.com/yikZero/Rosure"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group relative flex items-center justify-center px-2 text-secondary transition-all duration-200 hover:text-primary"
+    >
+      Contribution
+      <ArrowUpRight class="absolute -right-1 top-1 size-3 text-secondary" />
+    </a>
+    <a
+      href="https://github.com/yikZero/Rosure"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group flex size-8 items-center justify-center"
+    >
+      <Github
+        class="size-4 text-secondary transition-all duration-200 group-hover:text-primary"
+      />
+    </a>
+  </nav>
+</header>

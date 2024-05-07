@@ -1,0 +1,22 @@
+---
+import { allCategories } from '@/data/category';
+import Layout from '@/layouts/Layout.astro';
+import { getLinksForCategory } from '@/lib/link.utils';
+import LinkCard from '@/components/link-card.astro';
+
+export function getStaticPaths() {
+  return allCategories.map((category) => ({
+    params: { slug: category.name.toLowerCase() },
+  }));
+}
+const { slug } = Astro.params;
+const categoryLinks = getLinksForCategory(slug);
+---
+
+<Layout title="Hello - Rosure">
+  <div
+    class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+  >
+    {categoryLinks.map((link) => <LinkCard link={link} />)}
+  </div>
+</Layout>
