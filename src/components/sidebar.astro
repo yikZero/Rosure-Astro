@@ -2,7 +2,7 @@
 import { allCategories } from '@/data/category';
 import { getLinksCountForCategory } from '@/lib/link.utils';
 import { cn } from '@/lib/utils';
-const pathname = new URL(Astro.request.url).pathname;
+const pathname = Astro.url.pathname;
 const allCategory = {
   name: 'All',
   url: '/',
