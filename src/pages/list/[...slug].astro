@@ -10,10 +10,14 @@ export function getStaticPaths() {
   }));
 }
 const { slug } = Astro.params;
+const category = allCategories.find(
+  (category) => category.name.toLowerCase() === slug,
+);
+if (!category) return Astro.redirect('/404');
 const categoryLinks = getLinksForCategory(slug);
 ---
 
-<Layout title="Hello - Rosure">
+<Layout title={`${category.name} Library - Rosure`}>
   <div
     class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
   >
