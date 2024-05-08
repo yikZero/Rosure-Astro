@@ -7,6 +7,9 @@ const allCategory = {
   isExternal: false,
 };
 const categories = [allCategory, ...allCategories];
+const { activeSidebarId } = Astro.props;
+const activeLinkClass = 'bg-background';
+const activeTextClass = '!text-primary';
 ---
 
 <aside
@@ -19,10 +22,11 @@ const categories = [allCategory, ...allCategories];
         const linkCount = getLinksCountForCategory(category.name.toLowerCase());
         return (
           <a
+            id={category.name.toLowerCase()}
             href={category.url}
             class="group flex flex-row items-center justify-between rounded-md px-3 py-1.5 transition-all duration-200 md:py-2.5 md:pl-3 md:pr-2"
           >
-            <span class="line-clamp-1 w-full text-secondary group-hover:text-primary">
+            <span class="sidebar-text line-clamp-1 w-full text-secondary group-hover:text-primary">
               {category.name}
             </span>
             <span class="hidden rounded-md border border-border px-1 text-xs text-secondary opacity-0 transition-all duration-300 group-hover/sidebar:opacity-100 md:block">
@@ -34,3 +38,18 @@ const categories = [allCategory, ...allCategories];
     }
   </div>
 </aside>
+
+<script
+  define:vars={{
+    activeSidebarId: activeSidebarId,
+    activeLinkClass: activeLinkClass,
+    activeTextClass: activeTextClass,
+  }}
+  is:inline
+>
+  const activeItemElem = document.getElementById(activeSidebarId);
+  activeItemElem && activeItemElem.classList.add(activeLinkClass);
+
+  const activeTextElem = activeItemElem?.querySelector('.sidebar-text');
+  activeTextElem && activeTextElem.classList.add(activeTextClass);
+</script>

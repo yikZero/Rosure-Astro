@@ -17,7 +17,7 @@ if (!category) return Astro.redirect('/404');
 const categoryLinks = getLinksForCategory(slug);
 ---
 
-<Layout title={`${category.name} Library - Rosure`}>
+<Layout title={`${category.name} Library - Rosure`} activeSidebarId={slug}>
   <div
     class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
   >
