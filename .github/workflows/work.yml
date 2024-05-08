@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  BuildAndDeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: npm install
+
+      - name: Build static
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist/
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: '-rlgoDzvc -i --delete'
+          SOURCE: 'dist/'
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
+          EXCLUDE: '.user.ini'
+
+      - name: Create Zip
+        run: zip -r RosureDist.zip dist
+
+      - name: Notify on Success
+        if: success()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            *【正式】${{ github.event.commits[0].message }}*
+
+            *部署状态*：✅成功
+
+            *仓库*：`${{ github.repository }}`
+            *提交者*：`${{ github.actor }}`
+            *提交 SHA*：`${{ github.sha }}`
+
+            [部署预览](http://rosure.yikzero.com/)｜[代码变更](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          document: ro4dist.zip
+          format: markdown
+          disable_notification: true
+          disable_web_page_preview: true
+
+      - name: Notify on failure
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            *【正式】${{ github.event.commits[0].message }}*
+
+            *部署状态*：❌失败
+
+            [代码变更](https://github.com/${{ github.repository }}/commit/${{ github.sha }})｜[自动化日志](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          format: markdown
+          disable_web_page_preview: true
