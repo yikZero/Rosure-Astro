@@ -25,6 +25,7 @@ const activeTextClass = '!text-primary';
             id={category.name.toLowerCase()}
             href={category.url}
             class="group flex flex-row items-center justify-between rounded-md px-3 py-1.5 transition-all duration-200 md:py-2.5 md:pl-3 md:pr-2"
+            data-astro-prefetch
           >
             <span class="sidebar-text line-clamp-1 w-full text-secondary group-hover:text-primary">
               {category.name}

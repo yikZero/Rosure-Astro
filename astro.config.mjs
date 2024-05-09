@@ -5,6 +5,7 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://rosure.yikzero.com/',
+  prefetch: true,
   integrations: [
     tailwind({
       applyBaseStyles: false,
