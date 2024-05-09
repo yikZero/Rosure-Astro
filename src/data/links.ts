@@ -11,6 +11,7 @@ import chiinspirationslogo from '@/logo/chiinspirations-logo.png';
 import collletttivologo from '@/logo/collletttivo-logo.png';
 import darkdesignlogo from '@/logo/darkdesign-logo.png';
 import deckgallerylogo from '@/logo/deckgallery-logo.png';
+import ehtanchngdesignlogo from '@/logo/ehtanchngdesign-logo.png';
 import etclogo from '@/logo/etc-logo.png';
 import florianlogo from '@/logo/florian-logo.png';
 import fontminlogo from '@/logo/fontmin-logo.png';
@@ -492,6 +493,15 @@ export const allLinks: iLink[] = [
     category: 'Studio',
     icon: buttermaxlogo,
     url: 'https://buttermax.net/',
+  },
+  {
+    title: 'Ethan Chng Design',
+    description:
+      'a designer crafting interfaces and interactions that are useful and feel natural. ',
+    feature: ['Smooth', 'Blur'],
+    category: 'Studio',
+    icon: ehtanchngdesignlogo,
+    url: 'https://www.ethanchng.com/',
   },
   {
     title: 'v0 by Vercel',
