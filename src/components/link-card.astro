@@ -18,23 +18,29 @@ const { link } = Astro.props;
       <>
         <Image
           style={{ transform: 'translate3d(0, 0, 0)' }}
-          src={link.iconThemed.light}
+          src={`${link.iconThemed.light}!/format/webp`}
           alt={link.title}
-          class="block size-8 rounded-lg object-cover dark:hidden"
+          class="block rounded-lg object-cover dark:hidden"
+          width={32}
+          height={32}
         />
         <Image
           style={{ transform: 'translate3d(0, 0, 0)' }}
-          src={link.iconThemed.dark}
+          src={`${link.iconThemed.dark}!/format/webp`}
           alt={link.title}
-          class="hidden size-8 rounded-lg object-cover dark:block"
+          class="hidden rounded-lg object-cover dark:block"
+          width={32}
+          height={32}
         />
       </>
     ) : link.icon ? (
       <Image
         style={{ transform: 'translate3d(0, 0, 0)' }}
-        src={link.icon}
+        src={`${link.icon}!/format/webp`}
         alt={link.title}
-        class="size-8 rounded-lg object-cover"
+        class="rounded-lg object-cover"
+        width={32}
+        height={32}
       />
     ) : null
   }

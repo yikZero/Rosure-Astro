@@ -7,10 +7,10 @@ export interface iLink {
   title: string;
   description: string;
   feature: string[];
-  icon?: any;
+  icon?: string;
   iconThemed?: {
-    light?: any;
-    dark?: any;
+    light?: string;
+    dark?: string;
   };
   category: tCategory | CategoryPair | CategoryTriple;
   url: string;
