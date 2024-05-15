@@ -1,8 +1,7 @@
 ---
-import type { iLink } from '@/data/link.type';
 import { Image } from 'astro:assets';
 interface Props {
-  link: iLink;
+  link: any;
 }
 const { link } = Astro.props;
 ---
@@ -14,11 +13,11 @@ const { link } = Astro.props;
   class="flex flex-col items-center gap-2 rounded-lg border border-border/70 px-4 py-5 transition-all duration-200 hover:bg-background/50"
 >
   {
-    link.iconThemed?.light && link.iconThemed?.dark ? (
+    link.iconThemedLight && link.iconThemedDark ? (
       <>
         <Image
           style={{ transform: 'translate3d(0, 0, 0)' }}
-          src={`${link.iconThemed.light}!/format/webp`}
+          src={`${link.iconThemedLight}!/format/webp`}
           alt={link.title}
           class="block rounded-lg object-cover dark:hidden"
           width={32}
@@ -26,7 +25,7 @@ const { link } = Astro.props;
         />
         <Image
           style={{ transform: 'translate3d(0, 0, 0)' }}
-          src={`${link.iconThemed.dark}!/format/webp`}
+          src={`${link.iconThemedDark}!/format/webp`}
           alt={link.title}
           class="hidden rounded-lg object-cover dark:block"
           width={32}
@@ -55,11 +54,13 @@ const { link } = Astro.props;
     </div>
     <div class="hidden flex-row gap-1 sm:flex">
       {
-        link.feature.map((feature) => (
-          <div class="self-center text-nowrap rounded-full border border-border bg-background/30 px-3 text-xs font-medium text-secondary">
-            {feature}
-          </div>
-        ))
+        link.feature
+          .split(',')
+          .map((feature: string) => (
+            <div class="self-center text-nowrap rounded-full border border-border bg-background/30 px-3 text-xs font-medium text-secondary">
+              {feature}
+            </div>
+          ))
       }
     </div>
   </div>

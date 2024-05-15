@@ -1,0 +1,34 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1715699528612,
+      "tag": "0000_sweet_nebula",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1715741544902,
+      "tag": "0001_spicy_warstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1715742123652,
+      "tag": "0002_talented_sinister_six",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1715742232638,
+      "tag": "0003_pink_zarda",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,20 +1,24 @@
 ---
-import { allCategories } from '@/data/category';
 import Layout from '@/layouts/Layout.astro';
-import { getLinksForCategory } from '@/lib/link.utils';
 import LinkCard from '@/components/link-card.astro';
+import { getAllCategories, getLinksByCategory } from '@/lib/dataService';
 
-export function getStaticPaths() {
+const { categories: categoriesWithLinks } = await getLinksByCategory();
+
+export async function getStaticPaths() {
+  const allCategories = await getAllCategories();
   return allCategories.map((category) => ({
     params: { slug: category.name.toLowerCase() },
   }));
 }
+
 const { slug } = Astro.params;
-const category = allCategories.find(
+const category = categoriesWithLinks.find(
   (category) => category.name.toLowerCase() === slug,
 );
 if (!category) return Astro.redirect('/404');
-const categoryLinks = getLinksForCategory(slug);
+
+const categoryLinks = category.links;
 ---
 
 <Layout title={`${category.name} Library - Rosure`} activeSidebarId={slug}>

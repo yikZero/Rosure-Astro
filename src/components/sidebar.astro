@@ -1,12 +1,16 @@
 ---
-import { allCategories } from '@/data/category';
-import { getLinksCountForCategory } from '@/lib/link.utils';
-const allCategory = {
+import { getLinksByCategory } from '@/lib/dataService';
+const { categories: allCategories, totalLinkCount } =
+  await getLinksByCategory();
+
+const allOption = {
   name: 'All',
   url: '/',
-  isExternal: false,
+  linkCount: totalLinkCount,
+  links: [],
+  id: 0,
 };
-const categories = [allCategory, ...allCategories];
+allCategories.unshift(allOption);
 const { activeSidebarId } = Astro.props;
 const activeLinkClass = 'bg-background';
 const activeTextClass = '!text-primary';
@@ -18,17 +22,17 @@ const activeTextClass = '!text-primary';
 >
   <div class="flex size-full flex-row gap-1 px-4 py-2 md:flex-col md:p-2">
     {
-      categories.map((category) => {
-        const linkCount = getLinksCountForCategory(category.name.toLowerCase());
+      allCategories.map((category) => {
+        const { name, url, linkCount } = category;
         return (
           <a
-            id={category.name.toLowerCase()}
-            href={category.url}
+            id={name.toLowerCase()}
+            href={url}
             class="group flex flex-row items-center justify-between rounded-md px-3 py-1.5 transition-all duration-200 md:py-2.5 md:pl-3 md:pr-2"
             data-astro-prefetch
           >
             <span class="sidebar-text line-clamp-1 w-full text-secondary group-hover:text-primary">
-              {category.name}
+              {name}
             </span>
             <span class="hidden rounded-md border border-border px-1 text-xs text-secondary opacity-0 transition-all duration-300 group-hover/sidebar:opacity-100 md:block">
               {linkCount}

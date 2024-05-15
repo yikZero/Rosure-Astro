@@ -1,24 +1,12 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { allCategories } from '@/data/category';
-import { allLinks } from '@/data/links';
 import Star from '@/icons/star.astro';
 import LinkCard from '@/components/link-card.astro';
+import { getAllLinks, getLinksByCategory } from '@/lib/dataService';
 
+const allLinks = await getAllLinks();
 const favoriteLinks = allLinks.filter((link) => link.isFavorite);
-const filteredLinks = allLinks.filter((link) => link.title.toLowerCase());
-const linksByCategory = allCategories.reduce(
-  (acc, category) => {
-    const links = filteredLinks.filter(
-      (link) => link.category === category.name,
-    );
-    if (links.length > 0) {
-      acc[category.name] = links;
-    }
-    return acc;
-  },
-  {} as { [key: string]: typeof allLinks },
-);
+const { categories: linksByCategory } = await getLinksByCategory();
 ---
 
 <Layout title="Rosure - Hamster Plan" activeSidebarId="all">
@@ -26,7 +14,7 @@ const linksByCategory = allCategories.reduce(
     favoriteLinks.length > 0 && (
       <div class="mb-8">
         <h2 class="sticky top-[7.375rem] z-10 flex select-none flex-row gap-1 text-base font-semibold text-tertiary mix-blend-difference sm:text-lg md:top-16 dark:text-primary">
-          <Star class="size-4 self-center text-brand-600 dark:text-brand-500" />
+          <Star class="size-4 self-center text-brand-600 dark:text-brand-500" />{' '}
           Favorites
         </h2>
         <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -39,13 +27,13 @@ const linksByCategory = allCategories.reduce(
   }
   <div class="space-y-8">
     {
-      Object.entries(linksByCategory).map(([category, links]) => (
+      linksByCategory.map((category) => (
         <div>
           <h2 class="sticky top-[7.375rem] z-10 select-none text-base font-semibold text-tertiary mix-blend-difference sm:text-lg md:top-16 dark:text-primary">
-            {category}
+            {category.name}
           </h2>
           <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {links.map((link) => (
+            {category.links.map((link) => (
               <LinkCard link={link} />
             ))}
           </div>
