@@ -1,24 +1,42 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import LinkCard from '@/components/link-card.astro';
-import { getAllCategories, getLinksByCategory } from '@/lib/dataService';
-
-const { categories: categoriesWithLinks } = await getLinksByCategory();
+import { type Link, type Category } from '@/lib/types';
 
 export async function getStaticPaths() {
+  async function getAllCategories(): Promise<Category[]> {
+    const response = await fetch('https://api.yikzero.com/rosure/categories');
+    return await response.json();
+  }
+
+  async function getAllLinks(): Promise<Link[]> {
+    const response = await fetch('https://api.yikzero.com/rosure/links');
+    return await response.json();
+  }
+
   const allCategories = await getAllCategories();
-  return allCategories.map((category) => ({
-    params: { slug: category.name.toLowerCase() },
-  }));
+  const allLinks = await getAllLinks();
+
+  return allCategories.map((category) => {
+    const categoryLinks = allLinks.filter(
+      (link) => link.category === category.name,
+    );
+    return {
+      params: { slug: category.name.toLowerCase() },
+      props: { category, categoryLinks },
+    };
+  });
 }
 
-const { slug } = Astro.params;
-const category = categoriesWithLinks.find(
-  (category) => category.name.toLowerCase() === slug,
-);
-if (!category) return Astro.redirect('/404');
+interface Props {
+  category: Category;
+  categoryLinks: Link[];
+}
 
-const categoryLinks = category.links;
+const { category, categoryLinks } = Astro.props;
+const { slug } = Astro.params;
+
+if (!category) return Astro.redirect('/404');
 ---
 
 <Layout title={`${category.name} Library - Rosure`} activeSidebarId={slug}>

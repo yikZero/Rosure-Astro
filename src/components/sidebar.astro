@@ -1,19 +1,52 @@
 ---
-import { getLinksByCategory } from '@/lib/dataService';
-const { categories: allCategories, totalLinkCount } =
-  await getLinksByCategory();
+import type { Link, Category } from '@/lib/types';
 
-const allOption = {
-  name: 'All',
-  url: '/',
-  linkCount: totalLinkCount,
-  links: [],
-  id: 0,
-};
-allCategories.unshift(allOption);
+interface Props {
+  activeSidebarId?: string;
+}
+
 const { activeSidebarId } = Astro.props;
 const activeLinkClass = 'bg-background';
 const activeTextClass = '!text-primary';
+
+async function fetchData() {
+  const [linksResponse, categoriesResponse] = await Promise.all([
+    fetch('https://api.yikzero.com/rosure/links'),
+    fetch('https://api.yikzero.com/rosure/categories'),
+  ]);
+
+  const allLinks: Link[] = await linksResponse.json();
+  const categories: Category[] = await categoriesResponse.json();
+
+  return { allLinks, categories };
+}
+
+const { allLinks, categories } = await fetchData();
+
+// 计算每个类别的链接数量
+const categoryLinkCounts = allLinks.reduce<Record<string, number>>(
+  (acc, link) => {
+    acc[link.category] = (acc[link.category] || 0) + 1;
+    return acc;
+  },
+  {},
+);
+
+// 计算总链接数
+const totalLinkCount = allLinks.length;
+
+// 添加 "All" 选项并为每个类别添加链接数量
+interface ExtendedCategory extends Category {
+  linkCount: number;
+}
+
+const allCategories: ExtendedCategory[] = [
+  { id: 0, name: 'All', url: '/', linkCount: totalLinkCount },
+  ...categories.map((category) => ({
+    ...category,
+    linkCount: categoryLinkCounts[category.name] || 0,
+  })),
+];
 ---
 
 <aside
@@ -22,39 +55,29 @@ const activeTextClass = '!text-primary';
 >
   <div class="flex size-full flex-row gap-1 px-4 py-2 md:flex-col md:p-2">
     {
-      allCategories.map((category) => {
-        const { name, url, linkCount } = category;
-        return (
-          <a
-            id={name.toLowerCase()}
-            href={url}
-            class="group flex flex-row items-center justify-between rounded-md px-3 py-1.5 transition-all duration-200 md:py-2.5 md:pl-3 md:pr-2"
-            data-astro-prefetch
-          >
-            <span class="sidebar-text line-clamp-1 w-full text-secondary group-hover:text-primary">
-              {name}
-            </span>
-            <span class="hidden rounded-md border border-border px-1 text-xs text-secondary opacity-0 transition-all duration-300 group-hover/sidebar:opacity-100 md:block">
-              {linkCount}
-            </span>
-          </a>
-        );
-      })
+      allCategories.map((category) => (
+        <a
+          id={category.name.toLowerCase()}
+          href={category.url}
+          class="group flex flex-row items-center justify-between rounded-md px-3 py-1.5 transition-all duration-200 md:py-2.5 md:pl-3 md:pr-2"
+          data-astro-prefetch
+        >
+          <span class="sidebar-text line-clamp-1 w-full text-secondary group-hover:text-primary">
+            {category.name}
+          </span>
+          <span class="hidden rounded-md border border-border px-1 text-xs text-secondary opacity-0 transition-all duration-300 group-hover/sidebar:opacity-100 md:block">
+            {category.linkCount}
+          </span>
+        </a>
+      ))
     }
   </div>
 </aside>
 
-<script
-  define:vars={{
-    activeSidebarId: activeSidebarId,
-    activeLinkClass: activeLinkClass,
-    activeTextClass: activeTextClass,
-  }}
-  is:inline
->
+<script define:vars={{ activeSidebarId, activeLinkClass, activeTextClass }}>
   const activeItemElem = document.getElementById(activeSidebarId);
-  activeItemElem && activeItemElem.classList.add(activeLinkClass);
+  activeItemElem?.classList.add(activeLinkClass);
 
   const activeTextElem = activeItemElem?.querySelector('.sidebar-text');
-  activeTextElem && activeTextElem.classList.add(activeTextClass);
+  activeTextElem?.classList.add(activeTextClass);
 </script>

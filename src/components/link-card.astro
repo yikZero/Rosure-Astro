@@ -1,9 +1,14 @@
 ---
 import { Image } from 'astro:assets';
+import type { Link } from '@/lib/types';
+
 interface Props {
-  link: any;
+  link: Link;
 }
+
 const { link } = Astro.props;
+
+const features = link.feature.split(',').map((feature) => feature.trim());
 ---
 
 <a
@@ -13,35 +18,42 @@ const { link } = Astro.props;
   class="flex flex-col items-center gap-2 rounded-lg border border-border/70 px-4 py-5 transition-all duration-200 hover:bg-background/50"
 >
   {
-    link.iconThemedLight && link.iconThemedDark ? (
-      <>
-        <Image
-          style={{ transform: 'translate3d(0, 0, 0)' }}
-          src={`${link.iconThemedLight}!/format/webp`}
-          alt={link.title}
-          class="block rounded-lg object-cover dark:hidden"
-          width={32}
-          height={32}
-        />
-        <Image
-          style={{ transform: 'translate3d(0, 0, 0)' }}
-          src={`${link.iconThemedDark}!/format/webp`}
-          alt={link.title}
-          class="hidden rounded-lg object-cover dark:block"
-          width={32}
-          height={32}
-        />
-      </>
-    ) : link.icon ? (
-      <Image
-        style={{ transform: 'translate3d(0, 0, 0)' }}
-        src={`${link.icon}!/format/webp`}
-        alt={link.title}
-        class="rounded-lg object-cover"
-        width={32}
-        height={32}
-      />
-    ) : null
+    (() => {
+      if (link.iconLight && link.iconDark) {
+        return (
+          <>
+            <Image
+              style={{ transform: 'translate3d(0, 0, 0)' }}
+              src={`${link.iconLight}!/format/webp`}
+              alt={link.title}
+              class="block rounded-lg object-cover dark:hidden"
+              width={32}
+              height={32}
+            />
+            <Image
+              style={{ transform: 'translate3d(0, 0, 0)' }}
+              src={`${link.iconDark}!/format/webp`}
+              alt={link.title}
+              class="hidden rounded-lg object-cover dark:block"
+              width={32}
+              height={32}
+            />
+          </>
+        );
+      } else if (link.icon) {
+        return (
+          <Image
+            style={{ transform: 'translate3d(0, 0, 0)' }}
+            src={`${link.icon}!/format/webp`}
+            alt={link.title}
+            class="rounded-lg object-cover"
+            width={32}
+            height={32}
+          />
+        );
+      }
+      return null;
+    })()
   }
   <div class="flex flex-col items-center gap-1.5">
     <div class="line-clamp-1 items-center text-sm font-medium text-primary">
@@ -54,13 +66,11 @@ const { link } = Astro.props;
     </div>
     <div class="hidden flex-row gap-1 sm:flex">
       {
-        link.feature
-          .split(',')
-          .map((feature: string) => (
-            <div class="self-center text-nowrap rounded-full border border-border bg-background/30 px-3 text-xs font-medium text-secondary">
-              {feature}
-            </div>
-          ))
+        features.map((feature) => (
+          <div class="self-center text-nowrap rounded-full border border-border bg-background/30 px-3 text-xs font-medium text-secondary">
+            {feature}
+          </div>
+        ))
       }
     </div>
   </div>

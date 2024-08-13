@@ -2,11 +2,27 @@
 import Layout from '@/layouts/Layout.astro';
 import Star from '@/icons/star.astro';
 import LinkCard from '@/components/link-card.astro';
-import { getAllLinks, getLinksByCategory } from '@/lib/dataService';
+import { type Link } from '@/lib/types';
 
-const allLinks = await getAllLinks();
+const response = await fetch('https://api.yikzero.com/rosure/links');
+const allLinks: Link[] = await response.json();
+
 const favoriteLinks = allLinks.filter((link) => link.isFavorite);
-const { categories: linksByCategory } = await getLinksByCategory();
+
+const linksByCategory = allLinks.reduce<Record<string, Link[]>>((acc, link) => {
+  if (!acc[link.category]) {
+    acc[link.category] = [];
+  }
+  acc[link.category].push(link);
+  return acc;
+}, {});
+
+const categoriesArray: { name: string; links: Link[] }[] = Object.entries(
+  linksByCategory,
+).map(([name, links]) => ({
+  name,
+  links,
+}));
 ---
 
 <Layout title="Rosure - Hamster Plan" activeSidebarId="all">
@@ -27,7 +43,7 @@ const { categories: linksByCategory } = await getLinksByCategory();
   }
   <div class="space-y-8">
     {
-      linksByCategory.map((category) => (
+      categoriesArray.map((category) => (
         <div>
           <h2 class="sticky top-[7.375rem] z-10 select-none text-base font-semibold text-tertiary mix-blend-difference sm:text-lg md:top-16 dark:text-primary">
             {category.name}
