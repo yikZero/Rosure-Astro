@@ -12,16 +12,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup npm
-        uses: actions/setup-node@v3
+      - name: Setup pnpm & install
+        uses: pnpm/action-setup@v4
         with:
-          node-version: '20'
-
-      - name: Install deps
-        run: npm install
+          version: 9.12.2
+          run_install: true
 
       - name: Build static
-        run: npm run build
+        run: pnpm run build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -60,7 +58,7 @@ jobs:
             *提交 SHA*：`${{ github.sha }}`
 
             [部署预览](http://rosure.yikzero.com/)｜[代码变更](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
-          document: ro4dist.zip
+          document: RosureDist.zip
           format: markdown
           disable_notification: true
           disable_web_page_preview: true
