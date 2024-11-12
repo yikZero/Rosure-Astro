@@ -12,11 +12,11 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.1",
+    "@astrojs/check": "^0.9.4",
     "@astrojs/partytown": "^2.1.2",
-    "@astrojs/sitemap": "^3.1.6",
-    "@astrojs/tailwind": "^5.1.0",
-    "astro": "^4.13.1",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^5.1.2",
+    "astro": "^4.16.10",
     "clsx": "^2.1.1",
     "sharp": "^0.33.3",
     "tailwind-merge": "^2.3.0",
